@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<TextView  
+    android:id="@+id/text"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/text"
+    />
+<TextView  
+    android:id="@+id/model"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+    android:layout_below="@id/text" 
+    android:text=""
+    />
+<Button
+    android:id="@+id/unlock"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/model"
+    android:layout_alignParentLeft="true"
+    android:layout_marginLeft="10dip"
+    android:text="UNLOCK"
+    />
+<Button
+    android:id="@+id/lock"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/unlock"
+    android:layout_alignTop="@id/unlock"
+    android:text="LOCK"
+    />
+<TextView  
+    android:id="@+id/luc"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:layout_below="@id/unlock"
+    android:text="@string/luc"
+    />
+<Button
+    android:id="@+id/sgtunlock"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/luc"
+    android:layout_alignParentLeft="true"
+    android:layout_marginLeft="10dip"
+    android:text="SGT UNLOCK"
+    />
+<Button
+    android:id="@+id/sgtlock"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/sgtunlock"
+    android:layout_alignTop="@id/sgtunlock"
+    android:text="SGT LOCK"
+    />
+<Button
+    android:id="@+id/sgsunlock"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/sgtunlock"
+    android:layout_alignParentLeft="true"
+    android:layout_marginLeft="10dip"
+    android:text="SGS UNLOCK"
+    />
+<Button
+    android:id="@+id/sgslock"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/sgsunlock"
+    android:layout_alignTop="@id/sgsunlock"
+    android:text="SGS LOCK"
+    />
+<Button
+    android:id="@+id/sgs4gunlock"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/sgsunlock"
+    android:layout_alignParentLeft="true"
+    android:layout_marginLeft="10dip"
+    android:text="SGS4G UNLOCK"
+    />
+<Button
+    android:id="@+id/sgs4glock"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/sgs4gunlock"
+    android:layout_alignTop="@id/sgs4gunlock"
+    android:text="SGS4G LOCK"
+    />
+</RelativeLayout>
+

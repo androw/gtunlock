@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Unlock My Android</string>
+    <string name="allow">License Allowed</string>
+    <string name="dont_allow">License Refused</string>
+    <string name="application_error">Developper mistake</string>
+    <string name="text">This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n
+Just push UNLOCK if you want to unlock your phone.\n
+If you unlocked your phone with this application you can restore it to its original state using LOCK.\n
+Please accept root requests and wait for a message to be displayed or for the device to reboot.\n
+This application works with SGT and SGS.\n
+Your phone\'s model is:</string>
+	<string name="luc">If you know that your phone can be unlocked with the same procedure as phone we support, you can use the followings buttons to unlock or restore.</string>
+</resources>
