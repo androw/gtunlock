@@ -70,6 +70,8 @@ public class GalaxyTabUnlock extends Activity
 					unlockGTP1000();
 				} else if ((model == "GT-I9000") ||(model == "GT-I9000M") || (model == "SGH-I897") || (model == "SGH-T959")) {
 					unlockSGS();
+				} else if ((model == "GT-I9300")) {
+                                        unlockI9300();
 				} else {
 					displayMessage("Phone model not recognized.");
 				}
@@ -79,10 +81,12 @@ public class GalaxyTabUnlock extends Activity
         lock.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 				if ((model == "GT-P1000") || (model == "SGH-T849") || (model == "GT-P1000M") || (model == "SGH-I987")) {
-					unlockGTP1000();
+					lockGTP1000();
 				} else if ((model == "GT-I9000") ||(model == "GT-I9000M") || (model == "SGH-I897") || (model == "SGH-T959")) {
-					unlockSGS();
-				} else {
+					lockSGS();
+				} else if ((model == "GT-I9300")) {
+                                        ockI9300();
+                                } else {
 					displayMessage("Phone model not recognized.");
 				}
 			}
@@ -414,6 +418,57 @@ public class GalaxyTabUnlock extends Activity
 		if (!removedmd5) {exitMessage("ERROR: Can't remove md5. Maybe you deny root requests. Else, reboot your phone and you should be restored."); return;}
         rebootMessage("Original state restored.");
 	}
+
+
+public void unlockI9300() {
+                Process p;
+                DataOutputStream os;
+                File sdDir = Environment.getExternalStorageDirectory ();
+
+                File file = saveNedit("/efs/nv_data.bin");
+
+                if (file == null) {exitMessage("ERROR: Can't backup file. Maybe you already use this tools, or you deny root requests."); return;}
+
+                byte[] b = new byte[(int) file.length()];
+                try {
+                        FileInputStream input = new FileInputStream(file);
+                        input.read(b);
+                } catch (IOException e) {
+            		exitMessage("ERROR: Can't read nv_data.bin.modi. Please remove file in sdcard and retry.");
+                        return;
+                }
+
+                b[181469] = 0x00;
+
+                try {
+                        FileOutputStream output = new FileOutputStream(file);
+                        output.write(b);
+                        output.flush();
+                        output.close();
+                } catch (IOException e) {
+            exitMessage("ERROR: Can't write new file. Please remove file in sdcard and retry.");
+                        return;
+                }
+                boolean writed = restore(file, "/efs/nv_data.bin");
+                if (!writed) {exitMessage("ERROR: Can't write new file. Maybe you deny root requests. Try to reboot your phone, then use LOCK function if you are not unlocked to restore."); return;}
+        boolean removedmd5 = remove ("/efs/nv_data.bin.md5");
+        if (!removedmd5) {exitMessage("ERROR: Can't remove md5. Maybe you deny root requests. Else, reboot your phone and you should be unlocked."); return;}
+        boolean perm = execute("chown radio.radio /efs/nv_data.bin") && execute("chmod 755 /efs/nv_data.bin");
+        if (!perm) {exitMessage("ERROR: Can't write new permissions. Maybe you deny root requests. Else, reboot your phone and you should be unlocked."); return;}
+        rebootMessage("Phone unlocked.");
+    }
+        public void lockI9300() {
+                Process p;
+                DataOutputStream os;
+                File sdDir = Environment.getExternalStorageDirectory ();
+                File file = new File(sdDir, "nv_data.bin.orig");
+                boolean restored = restore (file, "/efs/nv_data.bin");
+                if (!restored) {exitMessage("ERROR: Can't restore backup. Maybe you didn't use this tool to unlock, or you deny root requests."); return;}
+                boolean removedmd5 = remove ("/efs/nv_data.bin.md5");
+                if (!removedmd5) {exitMessage("ERROR: Can't remove md5. Maybe you deny root requests. Else, reboot your phone and you should be restored."); return;}
+        rebootMessage("Original state restored.");
+        }
+
 }
 
 
