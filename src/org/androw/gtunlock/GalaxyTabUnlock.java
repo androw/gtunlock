@@ -72,6 +72,8 @@ public class GalaxyTabUnlock extends Activity
 					unlockSGS();
 				} else if ((model == "GT-I9300")) {
                                         unlockI9300();
+				} else if ((model =="SGH-T959V")) {
+					unlockSGS4G();
 				} else {
 					displayMessage("Phone model not recognized.");
 				}
@@ -85,8 +87,10 @@ public class GalaxyTabUnlock extends Activity
 				} else if ((model == "GT-I9000") ||(model == "GT-I9000M") || (model == "SGH-I897") || (model == "SGH-T959")) {
 					lockSGS();
 				} else if ((model == "GT-I9300")) {
-                                        ockI9300();
-                                } else {
+                                        lockI9300();
+				} else if ((model =="SGH-T959V")) {
+					lockSGS4G();
+				} else {
 					displayMessage("Phone model not recognized.");
 				}
 			}
@@ -116,6 +120,20 @@ public class GalaxyTabUnlock extends Activity
 				lockSGS();
 			}
 		});
+		
+		final Button sgs4gunlock = (Button) findViewById(R.id.sgs4gunlock);
+        unlock.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+				unlockSGS4G();
+			}
+		});
+		final Button sgs4glock = (Button) findViewById(R.id.sgs4glock);
+        lock.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+				lockSGS4G();
+			}
+		});
+		
 		TextView modelView = (TextView) findViewById(R.id.model);
 		modelView.setText(model);
     }
@@ -405,6 +423,8 @@ public class GalaxyTabUnlock extends Activity
 		if (!writed) {exitMessage("ERROR: Can't write new file. Maybe you deny root requests. Try to reboot your phone, then use LOCK function if you are not unlocked to restore."); return;}
         boolean removedmd5 = remove ("/efs/nv_data.bin.md5");
         if (!removedmd5) {exitMessage("ERROR: Can't remove md5. Maybe you deny root requests. Else, reboot your phone and you should be unlocked."); return;}
+        execute("chmod 755 /efs/nv_data.bin");
+        execute("chown radio.radio /efs/nv_data.bin || chown 1001.1001 /efs/nv_data.bin");
         rebootMessage("Phone unlocked.");
     }
 	public void lockSGS() {
@@ -416,6 +436,62 @@ public class GalaxyTabUnlock extends Activity
 		if (!restored) {exitMessage("ERROR: Can't restore backup. Maybe you didn't use this tool to unlock, or you deny root requests."); return;}
 		boolean removedmd5 = remove ("/efs/nv_data.bin.md5");
 		if (!removedmd5) {exitMessage("ERROR: Can't remove md5. Maybe you deny root requests. Else, reboot your phone and you should be restored."); return;}
+        execute("chmod 755 /efs/nv_data.bin");
+        execute("chown radio.radio /efs/nv_data.bin || chown 1001.1001 /efs/nv_data.bin");
+        rebootMessage("Original state restored.");
+	}
+	public void unlockSGS4G() {
+		Process p;
+		DataOutputStream os;
+		File sdDir = Environment.getExternalStorageDirectory ();
+		
+		File file = saveNedit("/efs/root/afs/settings/nv_data.bin");
+		
+		if (file == null) {exitMessage("ERROR: Can't backup file. Maybe you already use this tools, or you deny root requests."); return;}
+		
+		byte[] b = new byte[(int) file.length()];
+		try {
+			FileInputStream input = new FileInputStream(file);
+			input.read(b);
+		} catch (IOException e) {
+            exitMessage("ERROR: Can't read nv_data.bin.modi. Please remove file in sdcard and retry.");
+			return;
+		}
+		
+		b[5226] = 0x00;
+		b[5227] = 0x00;
+		b[5228] = 0x00;
+		b[5229] = 0x00;
+		b[5230] = 0x00;
+		
+		try {
+			FileOutputStream output = new FileOutputStream(file);
+			output.write(b);
+			output.flush();
+			output.close();
+		} catch (IOException e) {
+            exitMessage("ERROR: Can't write new file. Please remove file in sdcard and retry.");
+			return;
+		}	
+		boolean writed = restore(file, "/efs/root/afs/settings/nv_data.bin");	
+		if (!writed) {exitMessage("ERROR: Can't write new file. Maybe you deny root requests. Try to reboot your phone, then use LOCK function if you are not unlocked to restore."); return;}
+        boolean removedmd5 = remove ("/efs/root/afs/settings/nv_data.bin.md5");
+        if (!removedmd5) {exitMessage("ERROR: Can't remove md5. Maybe you deny root requests. Else, reboot your phone and you should be unlocked."); return;}
+        execute("chmod 755 /efs/root/afs/settings/nv_data.bin");
+        execute("chown radio.radio /efs/root/afs/settings/nv_data.bin || chown 1001.1001 /efs/root/afs/settings/nv_data.bin");
+        rebootMessage("Phone unlocked.");
+    }
+	public void lockSGS4G() {
+		Process p;
+		DataOutputStream os;
+		File sdDir = Environment.getExternalStorageDirectory ();
+		File file = new File(sdDir, "nv_data.bin.orig");
+		boolean restored = restore (file, "/efs/root/afs/settings/nv_data.bin");
+		if (!restored) {exitMessage("ERROR: Can't restore backup. Maybe you didn't use this tool to unlock, or you deny root requests."); return;}
+		boolean removedmd5 = remove ("/efs/root/afs/settings/nv_data.bin.md5");
+		if (!removedmd5) {exitMessage("ERROR: Can't remove md5. Maybe you deny root requests. Else, reboot your phone and you should be restored."); return;}
+        execute("chmod 755 /efs/root/afs/settings/nv_data.bin");
+        execute("chown radio.radio /efs/root/afs/settings/nv_data.bin || chown 1001.1001 /efs/root/afs/settings/nv_data.bin");
         rebootMessage("Original state restored.");
 	}
 
